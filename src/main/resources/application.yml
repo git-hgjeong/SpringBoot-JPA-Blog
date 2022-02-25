@@ -25,13 +25,13 @@ spring:
   jpa:
     open-in-view: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: create  #create:프로젝트 실생 시 마다 새로 생성, update:기존데이터에 append, none:사용안함. -> 첫번째에만 create 그 후엔 update
       naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      use-new-id-generator-mappings: false
-    show-sql: true
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl #Entity(table) 생성시 생성할 전략.
+      use-new-id-generator-mappings: false  #JPA가 사용하는 기본 DB 넘버링 전략설정 사용여부.
+    show-sql: true  #sql로그 출력
     properties:
-      hibernate.format_sql: true
+      hibernate.format_sql: true  #로그 pretty print
 
   jackson:
     serialization:
