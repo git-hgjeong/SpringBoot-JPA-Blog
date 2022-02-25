@@ -16,34 +16,6 @@ public class BlogController {
 		return "<h1>hello spring boot</h1>";
 	}
 	
-	@GetMapping("/http/get")
-	public String getTest(@RequestParam int id) {
-		return "get 요청 : (" + id + ")";
-	}
-	
-	@PostMapping("/http/post") // form-data, x-www-form-urlencoded
-	public String postTest(Member m) {	//SpringBoot MessageConverter
-		return "post 요청 : (" + m.getId() + ", "+ m.getUsername() +", "+ m.getEmail() +")";
-	}
-	
-	@PostMapping("/http/post2")	// mime : text/plain
-	public String postTest2(@RequestBody String text) {
-		return "post 요청 text : (" + text +")";
-	}	
-	
-	@PostMapping("/http/post3") // mime : application/json
-	public String postTest3(@RequestBody Member m) {
-		return "post 요청 : (" + m.getId() + ", "+ m.getUsername() +", "+ m.getEmail() +")";
-	}
-	
-	@PutMapping("/http/put")
-	public String putTest() {
-		return "put 요청";
-	}
-	
-	@DeleteMapping("/http/delete")
-	public String deleteTest() {
-		return "delete 요청";
-	}
+
 	
 }
