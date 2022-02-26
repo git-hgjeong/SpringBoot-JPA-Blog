@@ -80,12 +80,25 @@ public class DummyController {
 		return list;
 	}	
 	
+	//MessageConverter의 Jackson 라이브러리가 RequestBody로 넘어온 내용을 Java객체로 자동 변환해줌.
+	//save함수는 id를 전달하지 않으면 insert를 해주고
+	//save함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
+	//save함수는 id를 전달하면 해당 id에 대한 데이터가 없으면 insert를 한다.
 	@PutMapping("/dummy/user/{id}")
 	public User updateUser(@PathVariable int id, @RequestBody User requestUser) {
 		
+		System.out.println("id : "+ id);
 		System.out.println(requestUser.toString());
+
+		User user = userRepository.findById(id).orElseThrow(()-> {
+			return new IllegalArgumentException("수정할 데이터가 존재하지 않습니다. id:"+ id);
+		});
 		
-		return requestUser;
+		user.setPassword(requestUser.getPassword());
+		user.setEmail(requestUser.getEmail());
+		userRepository.save(user);
+		
+		return user;
 	}
 	
 }
