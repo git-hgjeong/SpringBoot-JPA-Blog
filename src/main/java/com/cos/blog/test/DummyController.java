@@ -3,11 +3,13 @@ package com.cos.blog.test;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,14 +26,6 @@ public class DummyController {
 
 	@Autowired
 	private UserRepository userRepository;
-	
-	@PostMapping("/dummy/join")
-	public String join(User user) {
-		System.out.println("User : "+ user.toString());
-		user.setRole(RoleType.USER);
-		userRepository.save(user);		
-		return "회원가입 완료.";
-	}
 	
 	@GetMapping("/dummy/user/{id}")
 	public User detail(@PathVariable int id) {
@@ -81,6 +75,14 @@ public class DummyController {
 		return list;
 	}	
 	
+	@PostMapping("/dummy/join")
+	public String join(User user) {
+		System.out.println("User : "+ user.toString());
+		user.setRole(RoleType.USER);
+		userRepository.save(user);		
+		return "회원가입 완료.";
+	}	
+	
 	//MessageConverter의 Jackson 라이브러리가 RequestBody로 넘어온 내용을 Java객체로 자동 변환해줌.
 	//save함수는 id를 전달하지 않으면 insert를 해주고
 	//save함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
@@ -106,4 +108,13 @@ public class DummyController {
 		return user;
 	}
 	
+	@DeleteMapping("/dummy/user/{id}")
+	public String deletUser(@PathVariable int id) {
+		try {
+			userRepository.deleteById(id);
+		}catch(EmptyResultDataAccessException e) {
+			return "삭제할 데이터가 존재하지 않습니다. ID : "+ id;
+		}
+		return "삭제되었습니다.";
+	}
 }
