@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -84,19 +85,23 @@ public class DummyController {
 	//save함수는 id를 전달하지 않으면 insert를 해주고
 	//save함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
 	//save함수는 id를 전달하면 해당 id에 대한 데이터가 없으면 insert를 한다.
+	@Transactional	//함수가 종료되면 자동 Commit. 이때 영속성 영역에 변경된 객체들을 DB와 동기화(Insert/Update) 한다.
 	@PutMapping("/dummy/user/{id}")
 	public User updateUser(@PathVariable int id, @RequestBody User requestUser) {
 		
 		System.out.println("id : "+ id);
 		System.out.println(requestUser.toString());
-
+		
+		//1) User Object가 영속화됨.
 		User user = userRepository.findById(id).orElseThrow(()-> {
 			return new IllegalArgumentException("수정할 데이터가 존재하지 않습니다. id:"+ id);
 		});
 		
+		//2) 영속화된 User Object를 변경하게 되면 Transaction이 종료될때 변경을 감지하여 DB에 수정을 처리함.=> 더티체킹. 
 		user.setPassword(requestUser.getPassword());
 		user.setEmail(requestUser.getEmail());
-		userRepository.save(user);
+		
+		//userRepository.save(user);	//@Transactional 처리하면 생략가능. 더티체킹에 의하여 자동 save 처리됨.
 		
 		return user;
 	}
