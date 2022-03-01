@@ -12,15 +12,7 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public int join(User user) {
-		try {
-			userRepository.save(user);
-			return 1;
-		}catch(Exception e) {
-			e.printStackTrace();
-			System.out.println("Error : User.join : "+ e.getMessage());
-			
-		}
-		return -1;
+	public void join(User user) {
+		userRepository.save(user);
 	}
 }
