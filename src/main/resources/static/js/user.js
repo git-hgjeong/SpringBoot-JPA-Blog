@@ -22,7 +22,8 @@
 			url: "/blog/api/user",
 			data: JSON.stringify(data),
 			contentType:"application/json;charset=utf-8",	//body data타입
-			dataType:"json"	//요청을 서버로해서 응답이 왔을때 기본적으로 모든것이 문자열인데 javascript Object로 변경함.
+			dataType:"json",	//요청을 서버로해서 응답이 왔을때 기본적으로 모든것이 문자열인데 javascript Object로 변경함.
+			context: this
 		}).done(function(response){
 			console.log(this.parent);
 			console.log(response);
@@ -32,16 +33,19 @@
 			}else{
 				var msg = response.data;
 				if(msg.indexOf("Duplicate") != -1){
-					alert("중복된 사용자가 존재합니다.");	
+					this.showError("중복된 사용자가 존재합니다.");	
 				}else{
-					alert("장애가 발생하였습니다.");
+					this.showError("장애가 발생하였습니다.");
 				}
 				
 			}
 		}).fail(function(error){
 			console.log(error);
-			alert(error.responseText);
+			this.showError(error.responseText);
 		});
+	},
+	showError: function(msg){
+		alert(msg);
 	}
 }
 
